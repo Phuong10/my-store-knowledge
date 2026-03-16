@@ -1,16 +1,28 @@
 ---
 name: Combo
-description: chương trình giảm giá combo, combo hiển thị như một sản phẩm
-tags: combo
+description: Quy ước tạo combo/bundle sản phẩm và tính giá
+tags: combo, bundle, định giá, tồn kho
 ---
 
-## Chuong trình combo
+## Tổng quan
 
-- Combo giảm giá
-- Combo trị giá
-- Tạo Combo có 3 loại: combo mẫu mã, combo sản phẩm, combo danh mục
+Combo là gói gồm nhiều sản phẩm/biến thể bán chung theo một mức giá hoặc ưu đãi riêng.
 
-## Combo hiển thị như một sản phẩm
+## Dữ liệu combo
 
-- Combo hiển thị như một sản phẩm chỉ áp dụng cho loại combo mẫu mã
-- Hiển thị combo trên danh sách product như một sản phẩm bình thường
+- Tên combo
+- Danh sách sản phẩm thành phần (SKU/biến thể + số lượng)
+- Giá combo (cố định) hoặc quy tắc giảm (theo %/số tiền)
+- Trạng thái: nháp / đang bán / ngừng bán
+- Thời gian áp dụng (tùy chọn)
+
+## Quy tắc tồn kho
+
+- Khi bán combo, trừ tồn kho theo từng sản phẩm thành phần
+- Không cho phép bán nếu bất kỳ thành phần nào không đủ tồn (trừ khi bật “cho phép đặt trước”)
+
+## Hiển thị & SEO
+
+- Trang combo có slug riêng (nếu có)
+- Có thể hiển thị combo như một “sản phẩm đặc biệt”
+
