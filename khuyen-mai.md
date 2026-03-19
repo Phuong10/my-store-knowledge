@@ -1,7 +1,7 @@
 ---
 name: Khuyến mãi
-description: Các loại khuyến mãi, logic đồng thời/loại trừ, điều kiện áp dụng và xung đột
-tags: khuyến mãi, coupon, giảm giá, điều kiện, free-ship, đồng thời, loại trừ
+description: Các loại khuyến mãi, logic đồng thời/loại trừ, độ ưu tiên, setting toàn cục và xung đột
+tags: khuyến mãi, coupon, giảm giá, điều kiện, free-ship, đồng thời, loại trừ, ưu tiên
 ---
 
 ## Tổng quan
@@ -38,10 +38,17 @@ Mỗi chương trình khuyến mãi thuộc 1 trong 2 nhóm:
 ### Nhóm Đồng thời
 - Đơn hàng hoặc sản phẩm có thể áp dụng **nhiều khuyến mãi đồng thời** cùng lúc
 - Các KM đồng thời không xung đột với nhau, được cộng dồn
+- **ƯU TIÊN CAO HƠN nhóm Loại trừ** — khi hệ thống xử lý, KM đồng thời luôn được áp dụng trước
 
 ### Nhóm Loại trừ
 - Khi nhiều KM loại trừ cùng thỏa mãn cho **cùng 1 SKU**, chỉ được áp dụng **1 KM** (theo độ ưu tiên hoặc KM có mức giảm sâu hơn)
 - Khi nhiều KM loại trừ thỏa mãn cho **các SKU khác nhau**, vẫn áp dụng được tất cả (mỗi SKU 1 KM)
+- Có mức ưu tiên **THẤP HƠN** nhóm Đồng thời
+
+### Thứ tự ưu tiên xử lý
+
+1. **KM Đồng thời** — áp dụng trước, cộng dồn tất cả
+2. **KM Loại trừ** — áp dụng sau, chỉ chọn 1 nếu xung đột trên cùng SKU hoặc cùng đầu đơn
 
 ### Quy tắc xử lý khi đơn hàng thỏa mãn nhiều KM
 
@@ -54,17 +61,31 @@ Mỗi chương trình khuyến mãi thuộc 1 trong 2 nhóm:
 - Đơn hàng thỏa mãn KM A và B cho **2 SKU khác nhau** → áp dụng cả A và B (mỗi SKU 1 KM)
 
 **Trường hợp 2 — Loại KM tính theo đầu đơn (ví dụ: giảm giá theo giá trị đơn hàng):**
-- Đơn hàng thỏa mãn KM A, B, X, Y → áp dụng: **(A hoặc B)** + **X** + **Y**
-- Lý do: KM loại trừ (A hoặc B) khi tính theo đầu đơn đã áp dụng cho toàn bộ SKU nên không bắt thêm KM loại trừ khác. Còn KM đồng thời (X, Y) vẫn cộng dồn bình thường.
+- Đơn hàng thỏa mãn KM A, B, X, Y → áp dụng: **X + Y** (đồng thời, ưu tiên cao) + **(A hoặc B)** (loại trừ, ưu tiên thấp)
+- Lý do: KM đồng thời (X, Y) được ưu tiên áp dụng trước và cộng dồn. KM loại trừ (A hoặc B) khi tính theo đầu đơn đã áp dụng cho toàn bộ SKU nên chỉ chọn 1.
 
 ### Bảng tóm tắt logic
 
-| Tình huống | KM Loại trừ | KM Đồng thời |
+| Tình huống | KM Đồng thời (ưu tiên cao) | KM Loại trừ (ưu tiên thấp) |
 |---|---|---|
-| Cùng 1 SKU | Chỉ 1 KM (ưu tiên/sâu hơn) | Áp dụng tất cả |
-| Khác SKU | Áp dụng tất cả (mỗi SKU 1 KM) | Áp dụng tất cả |
-| Tính theo đầu đơn | Chỉ 1 KM cho cả đơn | Áp dụng tất cả |
-| Kết hợp Loại trừ + Đồng thời | (A hoặc B) + X + Y | — |
+| Cùng 1 SKU | Áp dụng tất cả | Chỉ 1 KM (ưu tiên/sâu hơn) |
+| Khác SKU | Áp dụng tất cả | Áp dụng tất cả (mỗi SKU 1 KM) |
+| Tính theo đầu đơn | Áp dụng tất cả | Chỉ 1 KM cho cả đơn |
+| Kết hợp Đồng thời + Loại trừ | X + Y (áp dụng trước) | + (A hoặc B) (áp dụng sau) |
+
+## Setting toàn cục: "Kích hoạt một khuyến mãi duy nhất"
+
+Trong **Cài đặt > Cài đặt chung > Khuyến mãi** có option **"Kích hoạt một khuyến mãi duy nhất"**.
+
+### Khi BẬT
+- **Override toàn bộ logic** đồng thời/loại trừ ở trên
+- Toàn bộ đơn hàng chỉ được áp dụng **đúng 1 chương trình KM duy nhất**
+- Hệ thống sẽ chọn KM theo độ ưu tiên hoặc mức giảm sâu nhất
+- Ví dụ: đơn hàng thỏa mãn cả KM1 và KM2 → chỉ áp dụng 1 trong 2
+
+### Khi TẮT
+- Logic đồng thời/loại trừ hoạt động bình thường theo bảng tóm tắt ở trên
+- Đơn hàng có thể được áp dụng nhiều KM cùng lúc (tùy nhóm)
 
 ## Điều kiện áp dụng
 
